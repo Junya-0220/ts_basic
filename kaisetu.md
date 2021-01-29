@@ -41,3 +41,81 @@ webpackを使ってbundle.jsにバンドルする
 | lib | [] | 使用するJavaScriptライブラリ |
 | outDir | "./" | ビルド結果の出力先 |
 | baseUrl | "./" | import文のベースパス(絶対パスを変える) |
+
+```bash
+npm install --save-dev eslint eslint-config-prettier prettier @typescript-eslint/parser @typescript-eslint/eslint-plugin husky lint-staged
+```
+
+## ソースコードの品質を高めるツール
+
+ESLint
+
+- JavaScriptのための静的検証ツール
+- ファイル内のバグチェックやコーディングスタイルの一貫性を保つ
+
+Prettier
+
+- コードフォーマッター
+- ルールに則り、ソースコードを整形してくれる
+- プロジェクト毎にルールを設定する
+
+## tsconfigの基本的な設定項目
+
+| パッケージ名 | 初期値 |
+
+| :---: | :---: |
+
+| eslint-config-prettier | ESLintとPrettierを併用する際に |
+
+| @typescript-eslint/eslint-plugin | ESLintでTypeScriptのチェックを行うプラグイン |
+
+| @typescript-eslint/parser | ESLintでTypeScriptを解析できるようにする |
+
+| husky | Gitコマンドをフックに別のコマンドを呼び出せる |
+
+| lint-staged | commitしたファイル(stagingにあるファイル)にlintを実行できる |
+
+## Prettierの設定
+
+```bash
+
+//.prettierrc
+
+{
+"preintWidth": 120,
+"singleQuote": true,
+"semi": false
+}
+
+```
+
+## ESLintの設定
+1. prettierはextendsの最後に
+2. TypeScriptは解析するparserを指定
+3. tsconfig.jsonのパスに注意
+4. rootプロパティをtrueにするといい
+
+```JavaScript
+//.eslintrc.js
+module.exports = {
+env: {
+browser: true,
+es6: true
+},
+extends: [
+"eslint:recommended",
+"plugin:@typescript-eslint/recommended", // TypeScriptでチェックされる項目をLintから除外する設定
+"prettier", // prettierのextendsは他のextendsより後に記述する
+"prettier/@typescript-eslint",
+],
+plugins: ["@typescript-eslint"],
+parser: "@typescript-eslint/parser",
+parserOptions: {
+"sourceType": "module",
+"project": "./tsconfig.json" // TypeScriptのLint時に参照するconfigファイルを指定
+},
+root: true, // 上位ディレクトリにある他のeslintrcを参照しないようにする
+rules: {}
+}
+
+```
