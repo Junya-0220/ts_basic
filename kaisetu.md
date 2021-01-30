@@ -119,3 +119,126 @@ rules: {}
 }
 
 ```
+
+## 型推論と明示的な型定義
+
+* TypeScriptは型を推論する
+* 型アノテーションを使うことで明示的な型を定義する
+
+```JavaScript
+const name = "machida"; //string型と推論される
+const name: string = "machida"; //明示的にstring型と定義することもできる
+//ちなみにESLintのfixを使うと、わざわざ型アノテーションする必要がないと判断されて型推論される
+```
+## プリミティブ型
+
+* string:すべての文字列を扱う型
+* number:整数、浮動小数点、整数、負数、Infinity(無限大),NaN(非数),などすべての数値を扱う型
+* boolean:trueとfalseの2つの値を扱う型
+
+```JavaScript
+const name: string = "machida"
+const age: number = 31
+const isSingle: boolean = true
+// 判定式の結果も代入できる
+
+const isOver20 : boolean = age >= 20
+```
+
+## 存在しないことを表現する型
+
+* null: 値が欠如していることを表す
+* undefined: 初期化さてておらず値が割り当てられていないことを表す
+* できる限るundefinedを使う
+
+## TypeScriptはanyを回避するゲーム
+
+* any: どんな型でも許容する=全く安全ではない
+* unknown: どんな型になるのか不明
+* unknownは代入した値によって方が変化する
+
+## 関数で使われる特別な型
+
+* void: returnを持たない関数の戻り値
+
+```JavaScript
+const logMessage = (message: string): void => {
+  console.log('Function basic sample1', message)
+}
+```
+
+* never: 決して戻ることのない関数の戻り値
+
+```JavaScript
+const alwaysThrowError = (message: string): never => {
+  throw new Error(message)
+}
+```
+
+## 関数はどのように型定義するのか
+
+用語の整理
+
+1. パラメーター: 関数宣言時に渡される値(仮パラメータ)
+2. 引数: 関数を呼び出す時に渡す値
+3. 戻り値: 関数が返す値
+
+```JavaScript
+const logMessage = (message: string): void => {
+  console.log('Function basic sample:1', message)
+}
+logMessage('Hello TypeScript!!')
+```
+## オプションとデフォルト
+
+オプションパラメータ
+・パラメータの最後に記述する
+・オプショナルを表す?をつける
+
+```JavaScript
+const isUserSignedIn = (userId: string, username?: string): boolean => {
+  //省略
+}
+```
+
+デフォルトパラメータ
+・パラメータの順序は関係なく記述できる
+・=で指定する
+
+```JavaScript
+const usUserSigned2 = (
+  userId: string,
+  username = 'NO NAME',
+): boolean => {}
+```
+## 可変長引数
+
+・関数呼び出しの際に引数をいくつ渡してもOK
+・全く型安全ではない
+
+レストパラメータ
+・パラメータに...を用いることで型定義できる
+・パラメータの最後に１つだけ指定できる
+
+```JavaScript
+const sumPrice = (...price: number[]): number => {
+
+}
+```
+
+## 呼び出しシグネチャ
+
+・どのような関数なのかを表現する型定義
+・省略記法はアロー関数とにた形
+・完全な記法はオブジェクトと似た形
+
+```JavaScript
+type LogMessage = (message: string) => void
+
+type FullLogMessage = {
+  (message: string): void
+}
+const logMessage: LogMessage = (message) => {
+  console.log('Function basic sample:5', message)
+}
+```
