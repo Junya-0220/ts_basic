@@ -363,4 +363,54 @@ ids.push("DEF")//OK
 ids.push(456)//OK 
 ```
 
+## 配列の型推論
+
+・アノテーションしなくても型推論される
+```JavaScript
+const generateSomeArray = () => {
+  const _someArray = [] //any
+  _someArray.push(123) //number[]
+  _someArray.push("ABC")//(string | number)[]として推論される
+  return _someArray
+}
+
+const someArray = generateSomeArray()
+someArray.push(true)
+```
+
+## 厳格な配列=タプル
+
+タプルは配列の各要素の数と型を定義できる
+
+```JavaScript
+let response: [number, string] = [200,"OK"]
+response = [400, "Bad Request", "Email parameter is missing"]
+response = ["400", "Bad Request"]
+```
+
+可変長(レストパラメータ)も使える
+
+```JavaScript
+const girlfriends: [string, ...string[]] = ["Karen","Miku","Keiko"]
+```
+
+## イミュータブルな配列
+
+・JavaScriptの配列はconstで宣言してもミュータブル(書き換え可能)
+
+```JavaScript
+const mutableNumbers: number[] = [1,2,3]
+mutableNumbers[2] = 4
+```
+
+・readonlyでイミュータブル(書き換え不可)な配列/タプルを作れる
+
+```JavaScript
+const commands: readonly string[] = ["git add", "git commit", "git push"]
+commands.push("git fetch")//追加不可
+commands.push("git pull")//書き換え負荷
+
+const numbers: ReadonlyArray<number> = [1,2,3]
+const names: Readonly<string[]> = ["Tarou", "Kazu"]
+```
 

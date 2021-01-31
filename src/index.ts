@@ -25,7 +25,13 @@
 // console.log(`関数sumProductsPriceを使った計算の結果は${sum}です`)
 
 //05.オブジェクトの型定義
-import objectSample from './object1/object1'
-import typeAliasSample from './object1/alias'
-objectSample()
-typeAliasSample()
+// import objectSample from './object1/object1'
+// import typeAliasSample from './object1/alias'
+// objectSample()
+// typeAliasSample()
+
+//06.配列とタプルの型定義
+import arraySample from './array/array'
+import tupleSample from './array/tuple'
+arraySample()
+tupleSample()
