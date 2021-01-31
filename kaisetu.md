@@ -242,3 +242,125 @@ const logMessage: LogMessage = (message) => {
   console.log('Function basic sample:5', message)
 }
 ```
+
+## object型に意味はない
+
+object型はobjectであることを伝えるだけ
+
+```JavaScript
+const a: object = {
+  name: "machida",
+  age: 31
+}
+a.name //aというobjectにはnameというプロパティがないとエラーが出る
+```
+
+オブジェクトリテラル記法を使おう
+
+・構造を定義
+・各プロパティに型定義
+
+```JavaScript
+let country {
+  language: string,
+  name: string
+} = {
+  language: 'Japanese',
+  name: 'japan'
+}
+```
+## 特別なプロパティを扱う
+
+・オプショナルのついたプロパティはあってもOK
+・readonlyのついたプロパティは上書きできない
+
+```JavaScript
+let info: {
+  age: number,
+  lastName: string,
+  readonly: firstName: string
+  gender?: string
+} = {
+  age: 31,
+  lastName: "Junya",
+  firstName: "Machida"
+}
+
+info.gender = "male" //後から追加できる
+info.lastName = "Kamado" //上書きできる
+info.firstName = "Tanjiro" //readonlyがついているので上書きできない
+```
+
+## オブジェクトの柔軟な型定義
+
+インデックスシグネチャ
+・オブジェクトが複数のプロパティを持つ可能性を示す
+・[key:T]:Uのように定義する
+・keyはstringかnumberのみ
+
+```JavaScript
+const capitals: {
+  [countryName: string]: string
+} = {
+  Japan: 'Tokyo',
+  Korea: 'Seoul'
+}
+capitals.China = 'Beijing'
+capitals.Canada = 'Ottawa'
+
+```
+
+## 型エイリアスで型定義を再利用
+
+型エイリアスとは
+・typeを使って、型に名前をつけて宣言できる
+・同じ型を何度も定義する必要がない
+・型に名前をつけることで変数の役割を明確化
+
+```JavaScript
+type Country = {
+  capital: string
+  language: string
+  name: string
+} 
+
+const japan: Country = {
+  capital: 'Tokyo',
+  language: 'Japanese',
+  name: 'Japan'
+}
+```
+
+## 合併型と交差型
+
+・合併型：型Aか型Bどちらかの型を持つ
+・交差型：型Aのと型Bの型を持つ
+交差型は「AとBに共通する型」ではない
+
+
+## 配列に秩序をもたらす型定義
+
+・配列のようそとして持つ値の型を定義できる
+
+```JavaScript
+const colors: string[] = ['red','blue']
+colors.push('yellow')//OK
+colors.push(123)
+```
+
+・型定義方法: T[]とArray<T>は同義
+
+```JavaScript
+const odd: number[] = [1,3,5]
+const even: Array<number> = [2,4,6]
+```
+
+・合併型も使える
+
+```JavaScript
+const ids: (string | number)[] = ["ABC", 123]
+ids.push("DEF")//OK
+ids.push(456)//OK 
+```
+
+
