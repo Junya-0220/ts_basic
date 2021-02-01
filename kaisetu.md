@@ -122,19 +122,20 @@ rules: {}
 
 ## 型推論と明示的な型定義
 
-* TypeScriptは型を推論する
-* 型アノテーションを使うことで明示的な型を定義する
+・ TypeScriptは型を推論する
+・ 型アノテーションを使うことで明示的な型を定義する
 
 ```JavaScript
 const name = "machida"; //string型と推論される
 const name: string = "machida"; //明示的にstring型と定義することもできる
 //ちなみにESLintのfixを使うと、わざわざ型アノテーションする必要がないと判断されて型推論される
 ```
+
 ## プリミティブ型
 
-* string:すべての文字列を扱う型
-* number:整数、浮動小数点、整数、負数、Infinity(無限大),NaN(非数),などすべての数値を扱う型
-* boolean:trueとfalseの2つの値を扱う型
+・ string:すべての文字列を扱う型
+・ number:整数、浮動小数点、整数、負数、Infinity(無限大),NaN(非数),などすべての数値を扱う型
+・ boolean:trueとfalseの2つの値を扱う型
 
 ```JavaScript
 const name: string = "machida"
@@ -147,19 +148,19 @@ const isOver20 : boolean = age >= 20
 
 ## 存在しないことを表現する型
 
-* null: 値が欠如していることを表す
-* undefined: 初期化さてておらず値が割り当てられていないことを表す
-* できる限るundefinedを使う
+・ null: 値が欠如していることを表す
+・ undefined: 初期化さてておらず値が割り当てられていないことを表す
+・ できる限るundefinedを使う
 
 ## TypeScriptはanyを回避するゲーム
 
-* any: どんな型でも許容する=全く安全ではない
-* unknown: どんな型になるのか不明
-* unknownは代入した値によって方が変化する
+・ any: どんな型でも許容する=全く安全ではない
+・ unknown: どんな型になるのか不明
+・ unknownは代入した値によって方が変化する
 
 ## 関数で使われる特別な型
 
-* void: returnを持たない関数の戻り値
+・ void: returnを持たない関数の戻り値
 
 ```JavaScript
 const logMessage = (message: string): void => {
@@ -167,7 +168,7 @@ const logMessage = (message: string): void => {
 }
 ```
 
-* never: 決して戻ることのない関数の戻り値
+・ never: 決して戻ることのない関数の戻り値
 
 ```JavaScript
 const alwaysThrowError = (message: string): never => {
@@ -189,6 +190,7 @@ const logMessage = (message: string): void => {
 }
 logMessage('Hello TypeScript!!')
 ```
+
 ## オプションとデフォルト
 
 オプションパラメータ
@@ -211,6 +213,7 @@ const usUserSigned2 = (
   username = 'NO NAME',
 ): boolean => {}
 ```
+
 ## 可変長引数
 
 ・関数呼び出しの際に引数をいくつ渡してもOK
@@ -269,6 +272,7 @@ let country {
   name: 'japan'
 }
 ```
+
 ## 特別なプロパティを扱う
 
 ・オプショナルのついたプロパティはあってもOK
@@ -337,7 +341,6 @@ const japan: Country = {
 ・交差型：型Aのと型Bの型を持つ
 交差型は「AとBに共通する型」ではない
 
-
 ## 配列に秩序をもたらす型定義
 
 ・配列のようそとして持つ値の型を定義できる
@@ -348,7 +351,7 @@ colors.push('yellow')//OK
 colors.push(123)
 ```
 
-・型定義方法: T[]とArray<T>は同義
+・型定義方法: T[]とArray<ｔ>は同義
 
 ```JavaScript
 const odd: number[] = [1,3,5]
@@ -366,6 +369,7 @@ ids.push(456)//OK
 ## 配列の型推論
 
 ・アノテーションしなくても型推論される
+
 ```JavaScript
 const generateSomeArray = () => {
   const _someArray = [] //any
@@ -414,3 +418,44 @@ const numbers: ReadonlyArray<number> = [1,2,3]
 const names: Readonly<string[]> = ["Tarou", "Kazu"]
 ```
 
+## 型を抽象化するジェネリック型
+
+・型の種類は異なるが同じデータの構造...共通化できそう
+
+```JavaScript
+const stringReduce = (array: string[], initialValue: string): string => {}
+const numberReduce = (array: number[], initialValue: number): number => {}
+```
+
+ジェネリック型パラメータ
+・型をパラメータ化する(後から実パラメータを渡す)
+・T,U,V,Wなどが使われる
+
+```JavaScript
+ type Reduce<T> = {
+   (array: T[], initialValue: T): T
+ }
+ const reduce: Reduce<string> = (array, initialValue)=> {}
+```
+
+## ジェネリックの宣言方法
+
+「呼び出しシグネチャの記法」と「ジェネリック型の割当範囲」によって異なる
+
+```JavaScript
+//完全な呼び出しシグネチャ(シグネチャ全体にジェネリック型を割り当てる)
+type GenericReduce<T> = {
+  (array: T[], initialValue: T): T 
+}
+
+//完全な呼び出しシグネチャ(個々のシグネチャにジェネリック型を割り当てる)
+type GenericReduce2 = {
+  <T>(array: T[], initialValue: T): T
+  <U>(array: U[], initialValue: U): U
+}
+
+//呼び出しシグネチャの省略記法
+type FenericReduce3><T> = (array: T[], initialValue: T) => T
+type FenericReduce4> = <T>(array: T[], initialValue: T) => T
+
+```
