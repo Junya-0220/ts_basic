@@ -459,3 +459,148 @@ type FenericReduce3><T> = (array: T[], initialValue: T) => T
 type FenericReduce4> = <T>(array: T[], initialValue: T) => T
 
 ```
+
+## 呼び出し側の共通化
+
+ポリフォーリズム
+多様性・多様性=いろいろな形に変化できること
+ジェネリック型を用いると...
+・型を抽象化して共通化できる
+・呼び出す時に具体的な型を渡す
+
+
+## オブジェクト指向は再利用のために使う
+
+クラスの３つの役割
+
+1. まとめる　ある機能についてのデータと振る舞いをまとめる
+2. 隠す　外部から参照・改変できないようにする
+3. たくさん作る　同じ機能を持つクローンを量産できる
+
+用語の整理
+・プロパティ
+  クラスが持つデータ。フィールド、メンバ変数とも呼ばれる
+・メソッド
+  クラスで宣言する関数のこと
+・コンストラクタ
+  クラスからインスタンスを作る時に行う初期化
+・インスタンス
+  クラスから作られたオブジェクト
+  クラスの機能を持つクローンのようなもの
+
+## 将棋をモデル化してみよう
+
+```JavaScript
+class Game{} //将棋のゲーム
+class Piece{} //将棋の駒
+class Position{}// 駒の位置
+
+class Osho extends Piece {}
+class Hisha extends Piece{}
+class Kaku extends Piece {}
+class Kin extends Piece {}
+class Gin extends Piece {}
+class Keima extends Piece {}
+class Kyosha extends Piece {}
+class Fu extends Piece {}
+
+```
+
+駒の位置をクラスにする
+
+```JavaScript
+
+type Suji = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+type Dan = "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" |
+
+class Position {
+  constructor(
+    private suji: Suji,
+    private dan: Dan
+  ) {}
+}
+```
+
+Private: そのクラスのみアクセス可能
+Protected: そのクラスとサブクラスでのみアクセス可能
+public: どこからでもアクセス可能
+
+## 抽象クラスはインスタンス化できない
+
+```JavaScript
+abstract class Piece {
+  protected position: Position
+  constructor(
+    private readonly player: Player,
+    suji: Suji,
+    dan: Dan
+  ) {
+    this.position = new Position(suji, dan)
+  }
+}
+new Piece('first', 5, '1')
+```
+
+抽象クラス(abstract修飾子のついたクラス)
+抽象クラスはインスタンス化できない
+継承でサブクラスを作るためのクラス
+
+## 駒のサブクラスを宣言する
+
+```JavaScript
+abstract class Piece {
+  //パラメータにワアされた位置へ駒を移動するメソッド
+  //publicなので、サブクラスでオーバーライド(上書き)できる
+  moveTo(position: Position) {
+    this.position = position
+  }
+  //移動できるかどうかを判定するメソッド
+  //abstractをつけて宣言しておき、サブクラス具体的に実装する
+  abstract canMoveTo(positon: Position, player: Player): boolean
+}
+
+class Osho extends Piece {
+  //具体的な実装
+  cabMoveTo(position: Position, player: Player): boolean {
+    let distance = this.position.distanceFrom(position)
+    return distance.suji < 2 && distance.dan < 2
+  }
+}
+```
+
+## Gameクラスで駒を生成＆初期化
+
+```JavaScript
+class Game {
+  private pieces = Game.makePieces()
+  private static = makePieces() {
+    return [
+      new Osho('first', 5, '1')
+      new Osho('second', 5, '9')
+    ]
+  }
+}
+```
+
+## 歩と成金を表現する
+
+```JavaScript
+
+class Fu extends Piece {
+  canMoveTo(position: Position, player: Player): boolean {
+    const distance = this.position.distanceFrom(position, player)
+    //移動先と距離が前方１マスであれば
+    return distance.suji === 0 && distance.dan === 1
+  }
+}
+
+class Narikin extends Fu {
+  canMoveTo(position: Position, player: Player):boolean {
+    const distance = this.position.distanceFrom(position, player)
+    return (
+      distance < 2 && distance.dan < 2
+      && (distance.suji !== 0 distance.dan === -1)
+    )
+  }
+}
+```
