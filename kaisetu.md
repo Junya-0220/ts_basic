@@ -604,3 +604,81 @@ class Narikin extends Fu {
   }
 }
 ```
+
+## Type Alias と Interfaceの誤読
+
+・型エイリアス(type)の方が機能が少ない
+→2021年のバージョンでは大差なし
+
+すべてのソフトウェアは拡張的であるべきなのでinterfaceを使うべき
+→本当にそうか？
+ライブラリ...不特定多数の人が利用するので拡張性を持つべき
+アプリケーション...すべての方が拡張性を持つとバグを生む
+
+## Interfaceの基本的法要と宣言のマージ
+
+・interface宣言子で定義
+・Type Aliasと違って「=」は不要
+
+```JavaScript
+interface Bread {
+  calories: number
+}
+```
+
+・同名のinterfaceを宣言すると方が追加される
+・宣言のマージ:同じ名前を共有する複数の宣言を自動的に結合
+
+```JavaScript
+interface Bread {
+  type: string
+}
+
+const francePan: Bread = {
+  calories: 350,
+  type: 'hard'
+}
+```
+
+## Interfaceの拡張
+
+・extendsを使うことで継承白サブインターフェースを作れる
+・Type Aliasをextendsすることもできる
+
+```JavaScript
+interface Book {
+  page: number
+  title: string
+}
+
+interface Magazine extends Book {
+  cycle: 'daily'|'weekly'|'monthlly'|'yearly'
+}
+const jump: Magazine = {
+  cycle: 'weekly',
+  paga: 300,
+  title: '週刊少年ジャンプ'
+}
+```
+
+## Interfaceでclassに型を定義できる
+
+・implementsを使ってclassに型を定義できる
+
+```JavaScript
+interface Book {
+  page: number
+  title: string
+}
+
+class Comic implements Book {
+  page: number;
+  title: string;
+}
+constructor(page: number, title: string) {
+  this.page = page
+  this.title = title
+}
+
+const popularComic = new Comic(200, "鬼滅の刃")
+```
