@@ -682,3 +682,40 @@ constructor(page: number, title: string) {
 
 const popularComic = new Comic(200, "鬼滅の刃")
 ```
+
+## 非同期処理
+
+・非同期処理は通信が発生する場面で使う
+
+1. WEBAPIを叩く
+2. データベースへクエリを投げる
+・実行完了を待たずに次の処理に進む
+・JavaScriptはシングルスレッドの言語
+→非同期APIによって効率的に処理を行うことが可能
+
+非同期処理は一長一短
+・複数の処理を並行して効率よく実行できる
+→重い処理や時間のかかる通信中にユーザーに別の操作を許可するなど
+
+制御が難しい
+処理が実行中なのか実行完了したのかトレースしにくい
+
+どう対処する？
+→Promisやasync/awaitで非同期処理を同期的に処理する
+→型をつけることでわかりやすくなる
+
+## Promise型で実行完了後の値を定義する
+
+非同期処理の実行結果はPromise<string>のように定義できる
+
+```JavaScript
+type FetchProfile = () => Promise<Profile | null>
+const fetchProfile: FetchProfile = () => {
+  //非同期処理を行い、最終的にProfileかnullを返す
+}
+```
+
+Promiseの状態
+Promise<pending>:初期状態/実行中
+Promise<fulfilled>:処理が成功して完了した状態
+Proimse<rejected>:処理が失敗して完了した状態
